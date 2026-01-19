@@ -2,6 +2,7 @@ module Proofs.Permutation
 
 import Data.Vect
 import Data.Vect.Quantifiers
+import Data.Vect.Elem
 
 import Utils.Vect
 
@@ -66,3 +67,12 @@ permAppendCommutative : {n : Nat} ->  (v1 : Vect n a) -> {m : Nat} -> (v2 : Vect
 permAppendCommutative [] v2 = rewrite appendNilRightNeutral v2 in permRefl
 permAppendCommutative {n = S len} (x :: xs) v2 =
   PermTrans (PermSkip x (permAppendCommutative xs v2)) (rewrite plusCommutative len m in permMoveHeadToMiddle x v2 xs)
+
+public export
+permElem : Permutation v1 v2 -> Elem x v1 -> Elem x v2
+permElem (PermSkip x p) Here = Here
+permElem (PermSkip x p) (There y) = There (permElem p y)
+permElem (PermSwap x y xs) Here = There Here
+permElem (PermSwap x y xs) (There Here) = Here
+permElem (PermSwap x y xs) (There (There e)) = There (There (e))
+permElem (PermTrans p1 p2) e = permElem p2 (permElem p1 e)
