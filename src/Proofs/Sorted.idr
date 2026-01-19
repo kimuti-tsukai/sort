@@ -38,3 +38,7 @@ concatSortedWithMid Nil sorted2 mid allLTE allGTE = Cons mid allGTE sorted2
 concatSortedWithMid (Cons x {xs} xLTExs sortedXs) sortedYs mid (xLTEmid :: xsLTEmid) midLTEys =
   let tail = concatSortedWithMid sortedXs sortedYs mid xsLTEmid midLTEys
   in Cons x (xLTExs ++ xLTEmid :: extendTrans xLTEmid midLTEys) tail
+
+public export
+consWithHeadOrder : {rel : a -> a -> Type} -> Transitive a rel => (x : a) -> rel x y -> Sorted rel (y :: xs) -> Sorted rel (x :: y :: xs)
+consWithHeadOrder x xLTy (Cons y yLTys sortedYs) = Cons x (xLTy :: extendTrans xLTy yLTys) (Cons y yLTys sortedYs)
