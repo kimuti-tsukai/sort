@@ -9,6 +9,8 @@ import Proofs.Permutation
 import Proofs.Sorted
 import Utils.Relation
 
+%default total
+
 bubblePass :
   (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel)
   => (xs : Vect (S n) a)
