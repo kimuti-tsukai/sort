@@ -14,6 +14,10 @@ data Sorted : (rel : a -> a -> Type) -> Vect n a -> Type where
   Cons : (x : a) -> {xs : Vect n a} -> All (rel x) xs -> Sorted rel xs -> Sorted rel (x :: xs)
 
 public export
+sortedSingleton : {rel : a -> a -> Type} -> (x : a) -> Sorted rel [x]
+sortedSingleton x = Cons x Nil Nil
+
+public export
 concatSorted :
   {rel : a -> a -> Type} -> Transitive a rel
   => {v1 : Vect n a} -> Sorted rel v1
