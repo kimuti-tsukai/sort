@@ -26,6 +26,9 @@ modules = Sort
           , Sort.MergeSort
           , Sort.QuickSort
           , Sort.TimSort
+          , Sort.BubbleSort
+          , Sort.SelectionSort
+          , Sort.GnomeSort
 
 -- main file (i.e. file to load at REPL)
 -- main =
