@@ -32,9 +32,17 @@ A collection of sorting algorithm implementations in Idris2 with formal correctn
 - Hybrid sorting algorithm inspired by merge sort and insertion sort
 - Located in `src/Sort/TimSort.idr`
 
-### Bubble Sort & Gnome Sort
-- Additional simple sorting algorithms
-- Located in `src/Sort/BubbleSort.idr` and `src/Sort/GnomeSort.idr`
+### Selection Sort
+- Simple selection sort algorithm
+- Located in `src/Sort/SelectionSort.idr`
+
+### Bubble Sort
+- Classic bubble sort algorithm
+- Located in `src/Sort/BubbleSort.idr`
+
+### Gnome Sort
+- Simple comparison-based sorting algorithm
+- Located in `src/Sort/GnomeSort.idr`
 
 ## Project Structure
 
@@ -46,10 +54,13 @@ src/
 │   ├── MergeSort.idr
 │   ├── QuickSort.idr
 │   ├── TimSort.idr
+│   ├── SelectionSort.idr
 │   ├── BubbleSort.idr
 │   └── GnomeSort.idr
 ├── Proofs/                  # Proof modules
 │   ├── Permutation.idr      # Permutation relation and proofs
+│   ├── Permutation/
+│   │   └── Relation.idr     # Permutation relation utilities
 │   └── Sorted.idr           # Sorted predicate and proofs
 └── Utils/                   # Utility modules
     ├── Relation.idr         # Relation utilities
