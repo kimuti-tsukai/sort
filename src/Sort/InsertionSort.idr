@@ -3,6 +3,7 @@ module Sort.InsertionSort
 import Data.Vect
 import Data.Vect.Quantifiers
 
+import Sort
 import Proofs.Permutation
 import Proofs.Sorted
 import Utils.Relation
@@ -38,5 +39,5 @@ insertionSort rel (x :: xs) =
   in (inserted ** (PermTrans (PermSkip x perm) perm', sorted'))
 
 export
-insertionSort' : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => {n : Nat} -> (xs : Vect n a) -> (v : Vect n a ** (Permutation xs v, Sorted rel v))
+insertionSort' : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => SortAlgorithm a rel
 insertionSort' rel xs = insertionSort rel xs

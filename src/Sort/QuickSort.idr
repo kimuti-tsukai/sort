@@ -8,6 +8,7 @@ import Control.WellFounded
 
 import Proofs.Permutation
 import Proofs.Sorted
+import Sort
 import Sort.InsertionSort
 
 %default total
@@ -44,7 +45,7 @@ quickSortInner rel @{(sc, _)} (x :: xs) (Access acc) =
   in rewrite proof' in (leSorted ++ x :: gtSorted ** (permprf, sorted))
 
 export
-quickSort : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => {n : Nat} -> (xs : Vect n a) -> (v : Vect n a ** (Permutation xs v, Sorted rel v))
+quickSort : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => SortAlgorithm a rel
 quickSort rel xs = quickSortInner rel xs (wellFounded n)
 
 threshold : Nat
@@ -68,5 +69,5 @@ quickSortHybridInner rel @{(sc, _)} (x :: xs) (Access acc) =
   in rewrite proof' in (leSorted ++ x :: gtSorted ** (permprf, sorted))
 
 export
-quickSortHybrid : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => {n : Nat} -> (xs : Vect n a) -> (v : Vect n a ** (Permutation xs v, Sorted rel v))
+quickSortHybrid : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => SortAlgorithm a rel
 quickSortHybrid rel xs = quickSortHybridInner rel xs (wellFounded n)

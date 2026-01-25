@@ -11,6 +11,7 @@ import Proofs.Permutation
 import Proofs.Sorted
 import Utils.Relation
 import Utils.Vect
+import Sort
 import Sort.InsertionSort
 import Sort.MergeSort
 
@@ -193,7 +194,7 @@ mergeAllRuns runs = rewrite sym $ plusZeroRightNeutral (sumRunsLengthAligned run
       )
 
 export
-timSort : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => {n : Nat} -> (xs : Vect n a) -> (v : Vect n a ** (Permutation xs v, Sorted rel v))
+timSort : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => SortAlgorithm a rel
 timSort rel xs =
   let
     (runs ** sizePrf ** eqPrf) = makeRuns rel xs

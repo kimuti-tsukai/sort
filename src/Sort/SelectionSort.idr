@@ -7,6 +7,7 @@ import Data.Vect.Elem
 import Proofs.Sorted
 import Proofs.Permutation
 import Utils.Relation
+import Sort
 
 %default total
 
@@ -35,3 +36,7 @@ selectionSort rel (x :: xs) with (getMin rel (x :: xs))
       (xs'' ** (perm', sorted)) = selectionSort rel xs'
       (_ :: minLTExs') = permAll perm (minLTEx :: minLTExs)
     in (min :: xs'' ** (PermTrans perm (PermSkip min perm'), Cons min (permAll perm' minLTExs') sorted))
+
+public export
+selectionSort' : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => SortAlgorithm a rel
+selectionSort' rel xs = selectionSort rel xs

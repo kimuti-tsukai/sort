@@ -5,6 +5,7 @@ import Data.Vect.Quantifiers
 import Control.Order
 import Control.Relation
 
+import Sort
 import Proofs.Permutation
 import Proofs.Sorted
 import Utils.Relation
@@ -26,7 +27,7 @@ bubblePass rel @{(sc, _)} (x :: y :: xs) with (bubblePass rel (y :: xs))
       Left xLTEy' => Left (x ** y' :: xs' ** (PermSkip x perm, xLTEy' :: extendTrans xLTEy' yLTEx))
       Right y'LTEx => Left (y' ** x :: xs' ** (PermTrans (PermSkip x perm) (PermSwap x y' xs'), y'LTEx :: yLTEx))
 
-bubbleSort : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => (xs : Vect n a) -> (v : Vect n a ** (Permutation xs v, Sorted rel v))
+bubbleSort : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => SortAlgorithm a rel
 bubbleSort rel [] = ([] ** (PermNil, Nil))
 bubbleSort rel (x :: xs) with (bubblePass rel (x :: xs))
   _ | (Right sortedXXs) = (x :: xs ** (permRefl, sortedXXs))

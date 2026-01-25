@@ -12,6 +12,7 @@ import Proofs.Permutation
 import Proofs.Sorted
 import Utils.Vect
 import Utils.Relation
+import Sort
 import Sort.InsertionSort
 
 %default total
@@ -84,7 +85,7 @@ mergeSortInner rel {n = S (S len)} xs (Access acc) =
   in rewrite eqPrf in (v ** (rewrite appendPrf in perm', sortedV))
 
 export
-mergeSort : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => {n : Nat} -> (xs : Vect n a) -> (v : Vect n a ** (Permutation xs v, Sorted rel v))
+mergeSort : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => SortAlgorithm a rel
 mergeSort rel xs = mergeSortInner rel xs (wellFounded n)
 
 threshold : Nat
@@ -104,5 +105,5 @@ mergeSortHybridInner rel {n = S (S len)} xs (Access acc) =
   in rewrite eqPrf in (v ** (rewrite appendPrf in perm', sortedV))
 
 export
-mergeSortHybrid : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => {n : Nat} -> (xs : Vect n a) -> (v : Vect n a ** (Permutation xs v, Sorted rel v))
+mergeSortHybrid : (rel : a -> a -> Type) -> (StronglyConnex a rel, Transitive a rel) => SortAlgorithm a rel
 mergeSortHybrid rel xs = mergeSortHybridInner rel xs (wellFounded n)
