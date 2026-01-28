@@ -90,3 +90,10 @@ swap FZ FZ xs = (xs ** permRefl)
 swap FZ (FS n) (x :: xs) = let (y ** ys ** perm) = replace n x xs in (y :: ys ** perm)
 swap (FS n) FZ (x :: xs) = let (y ** ys ** perm) = replace n x xs in (y :: ys ** perm)
 swap (FS n) (FS m) (x :: xs) = let (ys ** perm) = swap n m xs in (x :: ys ** PermSkip x perm)
+
+public export
+replaceElem : (x' : a) -> (xs : Vect n a) -> {x : a} -> Elem x xs -> (ys : Vect n a ** (Elem x' ys, Permutation (x' :: xs) (x :: ys)))
+replaceElem x' (x :: xs) Here = (x' :: xs ** (Here, PermSwap x' x xs))
+replaceElem x' (y :: z :: xs) (There e) =
+  let (ys ** (elem, perm)) = replaceElem x' (z :: xs) e
+  in (y :: ys ** (There elem, PermTrans (PermSwap x' y (z :: xs)) (PermTrans (PermSkip y perm) (PermSwap y x ys))))
