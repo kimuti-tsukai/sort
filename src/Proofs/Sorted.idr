@@ -1,7 +1,10 @@
 module Proofs.Sorted
 
+import Data.Fun
+import Data.Rel
 import Data.Vect
 import Data.Vect.Quantifiers
+import Decidable.Decidable
 
 import Utils.Vect
 import Utils.Relation
@@ -46,3 +49,20 @@ concatSortedWithMid (Cons x {xs} xLTExs sortedXs) sortedYs mid (xLTEmid :: xsLTE
 public export
 consWithHeadOrder : {rel : a -> a -> Type} -> Transitive a rel => (x : a) -> rel x y -> Sorted rel (y :: xs) -> Sorted rel (x :: y :: xs)
 consWithHeadOrder x xLTy (Cons y yLTys sortedYs) = Cons x (xLTy :: extendTrans xLTy yLTys) (Cons y yLTys sortedYs)
+
+public export
+decSorted : {a : Type} -> (rel : a -> a -> Type) -> (Decidable 2 [a, a] rel, Transitive a rel) => (xs : Vect n a) -> Dec (Sorted rel xs)
+decSorted rel [] = Yes Nil
+decSorted rel @{(dc, _)} (x :: ys) with (ys) proof e
+  _ | [] = Yes (sortedSingleton x)
+  _ | (y :: xs) with (decide @{dc} x y)
+    _ | (Yes xLTEy) with (replace {p = Dec . (Sorted rel)} e (decSorted rel ys))
+      _ | (Yes (Cons _ yLTExs sortedXs)) = Yes (Cons x (xLTEy :: extendTrans xLTEy yLTExs) (Cons y yLTExs sortedXs))
+      _ | (No notSortedYXs) = No notSortedXYXs
+        where
+          notSortedXYXs : Sorted rel (x :: y :: xs) -> Void
+          notSortedXYXs (Cons _ _ sortedXs) = notSortedYXs sortedXs
+    _ | (No xNotLTEy) = No notSortedXYXs
+      where
+        notSortedXYXs : Sorted rel (x :: y :: xs) -> Void
+        notSortedXYXs (Cons _ (xLTEy :: _) _) = xNotLTEy xLTEy
