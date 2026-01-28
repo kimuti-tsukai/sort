@@ -76,3 +76,17 @@ permElem (PermSwap x y xs) Here = There Here
 permElem (PermSwap x y xs) (There Here) = Here
 permElem (PermSwap x y xs) (There (There e)) = There (There (e))
 permElem (PermTrans p1 p2) e = permElem p2 (permElem p1 e)
+
+public export
+replace : Fin n -> (x : a) -> (xs : Vect n a) -> (y : a ** ys : Vect n a ** Permutation (x :: xs) (y :: ys))
+replace 0 x (y :: xs) = (y ** x :: xs ** PermSwap x y xs)
+replace (FS n) x (x' :: y :: xs) =
+  let (y' ** ys ** perm) = replace n x (y :: xs)
+  in (y' ** x' :: ys ** PermTrans (PermSwap x x' (y :: xs)) (PermTrans (PermSkip x' perm) (PermSwap x' y' ys)))
+
+public export
+swap : Fin n -> Fin n -> (xs : Vect n a) -> (ys : Vect n a ** Permutation xs ys)
+swap FZ FZ xs = (xs ** permRefl)
+swap FZ (FS n) (x :: xs) = let (y ** ys ** perm) = replace n x xs in (y :: ys ** perm)
+swap (FS n) FZ (x :: xs) = let (y ** ys ** perm) = replace n x xs in (y :: ys ** perm)
+swap (FS n) (FS m) (x :: xs) = let (ys ** perm) = swap n m xs in (x :: ys ** PermSkip x perm)
