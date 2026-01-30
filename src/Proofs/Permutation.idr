@@ -77,6 +77,36 @@ permElem (PermSwap x y xs) (There Here) = Here
 permElem (PermSwap x y xs) (There (There e)) = There (There (e))
 permElem (PermTrans p1 p2) e = permElem p2 (permElem p1 e)
 
+dropThere : (x : a) -> (xs : Vect (S n) a) -> (elem : Elem y xs) -> dropElem (x :: xs) (There elem) = x :: dropElem xs elem
+dropThere x (y :: rest) Here = Refl
+dropThere x (y :: (z :: rest)) (There e) = rewrite dropThere y (z :: rest) e in Refl
+
+dropHere : (x : a) -> (xs : Vect n a) -> xs = dropElem (x :: xs) Here
+dropHere x xs = Refl
+
+public export
+permRemoveElem : {v1, v2 : Vect (S n) a} -> (perm : Permutation v1 v2) -> (elem : Elem x v1) -> Permutation (dropElem v1 elem) (dropElem v2 (permElem perm elem))
+permRemoveElem (PermSkip x p) Here = p
+permRemoveElem {v1 = x :: (x' :: xs)} {v2 = x :: ys} (PermSkip x p) (There e) = rewrite dropThere x ys (permElem p e) in PermSkip x (permRemoveElem p e)
+permRemoveElem (PermSwap x y rest) e with (e)
+  _ | Here = permRefl
+  _ | (There Here) = permRefl
+  _ | (There (There elem)) with (rest)
+    _ | (z :: rest') = PermSwap x y _
+permRemoveElem (PermTrans p1 p2) e = PermTrans (permRemoveElem p1 e) (permRemoveElem p2 (permElem p1 e))
+
+public export
+permElemMoveToHead : (xs : Vect (S n) a) -> {x : a} -> (elem : Elem x xs) -> Permutation xs (x :: dropElem xs elem)
+permElemMoveToHead (x :: xs) Here = (PermSkip x permRefl)
+permElemMoveToHead (x' :: y :: rest) (There e) = PermTrans (PermSkip x' (permElemMoveToHead (y :: rest) e)) (PermSwap x' x _)
+
+public export
+permSkipPerm : {x : a} -> {xs, xs' : Vect n a} -> Permutation (x :: xs) (x :: xs') -> Permutation xs xs'
+permSkipPerm p with (permElem p Here) proof eq
+  _ | Here = rewrite dropHere x xs' in replace {p = Permutation xs . (dropElem (x :: xs'))} eq $ permRemoveElem p Here
+  _ | (There elem) with (xs')
+    _ | (y :: rest) = PermTrans (permRemoveElem p Here) (rewrite eq in permSym $ permElemMoveToHead (y :: rest) elem)
+
 public export
 replace : Fin n -> (x : a) -> (xs : Vect n a) -> (y : a ** ys : Vect n a ** Permutation (x :: xs) (y :: ys))
 replace 0 x (y :: xs) = (y ** x :: xs ** PermSwap x y xs)
