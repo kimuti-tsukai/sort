@@ -45,3 +45,9 @@ stronglyConnexReflexive : (rel : a -> a -> Type) -> (StronglyConnex a rel) => {x
 stronglyConnexReflexive rel = case order x x of
   Left prf => prf
   Right prf => prf
+
+public export
+[StronglyConnexReflexive] (sc : StronglyConnex a rel) => Reflexive a rel where
+  reflexive with (order @{sc} x x)
+    _ | (Left prf) = prf
+    _ | (Right prf) = prf
