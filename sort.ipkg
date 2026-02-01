@@ -19,6 +19,7 @@ depends = base, contrib
 modules = Sort
           , Proofs.Permutation
           , Proofs.Permutation.Relation
+          , Proofs.Permutation.Properties
           , Proofs.Sorted
           , Utils.Vect
           , Utils.Relation
