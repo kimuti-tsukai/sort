@@ -51,7 +51,7 @@ consWithHeadOrder : {rel : a -> a -> Type} -> Transitive a rel => (x : a) -> rel
 consWithHeadOrder x xLTy (Cons y yLTys sortedYs) = Cons x (xLTy :: extendTrans xLTy yLTys) (Cons y yLTys sortedYs)
 
 public export
-decSorted : {a : Type} -> (rel : a -> a -> Type) -> (Decidable 2 [a, a] rel, Transitive a rel) => (xs : Vect n a) -> Dec (Sorted rel xs)
+decSorted : (rel : a -> a -> Type) -> (Decidable 2 [a, a] rel, Transitive a rel) => (xs : Vect n a) -> Dec (Sorted rel xs)
 decSorted rel [] = Yes Nil
 decSorted rel @{(dc, _)} (x :: ys) with (ys) proof e
   _ | [] = Yes (sortedSingleton x)
