@@ -48,7 +48,7 @@ A collection of sorting algorithm implementations in Idris2 with formal correctn
 
 ```
 src/
-├── Sort.idr                 # Main module, re-exports all sorting algorithms
+├── Sort.idr                 # Main module with SortAlgorithm type alias
 ├── Sort/                    # Sorting algorithm implementations
 │   ├── InsertionSort.idr
 │   ├── MergeSort.idr
@@ -60,7 +60,8 @@ src/
 ├── Proofs/                  # Proof modules
 │   ├── Permutation.idr      # Permutation relation and proofs
 │   ├── Permutation/
-│   │   └── Relation.idr     # Permutation relation utilities
+│   │   ├── Relation.idr     # Permutation relation utilities
+│   │   └── Properties.idr   # Additional permutation properties
 │   └── Sorted.idr           # Sorted predicate and proofs
 └── Utils/                   # Utility modules
     ├── Relation.idr         # Relation utilities
@@ -76,19 +77,31 @@ To use the sorting algorithms in your Idris2 project:
    depends = base, contrib, sort
    ```
 
-2. Import the module:
+2. Import the sorting algorithm you want to use:
    ```idris
-   import Sort
+   import Sort.InsertionSort
+   import Sort.MergeSort
+   -- or any other algorithm
    ```
 
 3. Use a sorting function:
    ```idris
    import Sort.InsertionSort
    import Data.Vect
+   import Control.Order
    
    -- Sort a vector of natural numbers
-   sorted : (v : Vect n Nat ** (Permutation input v, Sorted LTE v))
+   sorted : (v : Vect 8 Nat ** (Permutation [3, 1, 4, 1, 5, 9, 2, 6] v, Sorted LTE v))
    sorted = insertionSort LTE [3, 1, 4, 1, 5, 9, 2, 6]
+   ```
+
+4. The `Sort` module also provides a type alias for convenience:
+   ```idris
+   import Sort
+   
+   -- SortAlgorithm is defined as:
+   -- SortAlgorithm a rel = {n : Nat} -> (xs : Vect n a) 
+   --                    -> (v : Vect n a ** (Permutation xs v, Sorted rel v))
    ```
 
 ## Building
@@ -99,7 +112,7 @@ This project uses `pack` for dependency management:
 # Build the project
 pack build sort.ipkg
 
-# Run tests
+# Run tests (includes benchmarks)
 pack test sort.ipkg
 
 # Install to pack's global collection
@@ -114,7 +127,22 @@ idris2 --build sort.ipkg
 
 # Install
 idris2 --install sort.ipkg
+
+# Run tests
+cd test
+idris2 --build test.ipkg
+./build/exec/test
 ```
+
+## Testing & Benchmarks
+
+The project includes performance benchmarks for the main sorting algorithms (Insertion Sort, Merge Sort, Quick Sort, and Tim Sort). Run them with:
+
+```bash
+pack test sort.ipkg
+```
+
+The benchmark tests sort 100,000 random natural numbers 10 times and reports average execution time in nanoseconds.
 
 ## Requirements
 
